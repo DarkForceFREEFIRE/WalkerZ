@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Fire Info API v2.0 - Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0a0e17;
+      --bg-card: #0f1623;
+      --bg-code: #070a10;
+      --border-color: #1a2333;
+      --text-main: #e2e8f0;
+      --text-muted: #8492a6;
+      --accent-blue: #0284c7;
+      --accent-cyan: #38bdf8;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --badge-get: #0284c7;
+      --badge-post: #059669;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* Endpoint Card */
+    .endpoint-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .method-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .method-badge.get { background-color: var(--badge-get); }
+    .method-badge.post { background-color: var(--badge-post); }
+
+    .endpoint-path {
+      font-family: 'Fira Code', monospace;
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .endpoint-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Parameters Table */
+    .params-table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .param-name {
+      font-family: 'Fira Code', monospace;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .param-type {
+      color: var(--text-muted);
+    }
+
+    .param-required {
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .param-optional {
+      color: var(--text-muted);
+    }
+
+    /* Code Snippet Box */
+    .code-box {
+      background-color: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-main);
+    }
+
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      color: #93c5fd;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-badge">API Documentation</div>
+      <h1>Free Fire Info API v2.0</h1>
+      <p class="subtitle">Real-time stats, gallery, wishlist, and player info extraction service.</p>
+    </header>
+
+    <!-- Check Ban -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/check_ban</span>
+      </div>
+      <p class="endpoint-desc">Inspect whether the targeted player UID is currently blacklisted or flagged as suspended by Garena anti-cheat systems.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">lang</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Language code for response (e.g., <code>en</code>, <code>id</code>, <code>pt</code>). Default is <code>en</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/check_ban?uid=10597688191')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/check_ban?uid=10597688191</code></pre>
+      </div>
+    </div>
+
+    <!-- Get Full Profile -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/get</span>
+      </div>
+      <p class="endpoint-desc">Fetch complete account profile, level, clan overview, and personal showcase records.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code (e.g. <code>SG</code>, <code>IND</code>, <code>BR</code>). Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/get?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/get?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Search Player -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/search</span>
+      </div>
+      <p class="endpoint-desc">Search player accounts by nickname and return matching profiles for the selected region.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">name</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Nickname or player name to search.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/search?name=Vortex&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/search?name=Vortex&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/stats</span>
+      </div>
+      <p class="endpoint-desc">Fetch battle royale lifetime and seasonal combat stats for Solo, Duo, and Squad matches.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">mode</td>
+              <td class="param-type">Number</td>
+              <td class="param-optional">No</td>
+              <td><code>0</code> = all, <code>1</code> = ranked, <code>2</code> = casual.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/stats?uid=10597688191&amp;mode=1&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/stats?uid=10597688191&amp;mode=1&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Wishlist Leaderboard -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/wishlist/leaderboard</span>
+      </div>
+      <p class="endpoint-desc">Fetch the most popular wishlist items by regional leaderboard trends over 7-day and 30-day windows.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Server region code.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/wishlist/leaderboard?region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/wishlist/leaderboard?region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Occupation New Season Show -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge post">POST</span>
+        <span class="endpoint-path">/occupation/set_new_season_show</span>
+      </div>
+      <p class="endpoint-desc">Update the display state for the active occupation season show based on mode and match settings.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">game_mode</td>
+              <td class="param-type">Number</td>
+              <td class="param-required">Yes</td>
+              <td>Game mode identifier.</td>
+            </tr>
+            <tr>
+              <td class="param-name">match_mode</td>
+              <td class="param-type">Number</td>
+              <td class="param-required">Yes</td>
+              <td>Match mode identifier.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'curl -X POST &quot;http://127.0.0.1:5000/occupation/set_new_season_show?game_mode=1&amp;match_mode=2&amp;region=SG&quot;')">Copy</button>
+        </div>
+        <pre><code>curl -X POST "http://127.0.0.1:5000/occupation/set_new_season_show?game_mode=1&amp;match_mode=2&amp;region=SG"</code></pre>
+      </div>
+    </div>
+
+    <!-- Heroic History -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/heroic_history</span>
+      </div>
+      <p class="endpoint-desc">Fetch historical Heroic and Grandmaster season badge progress for the selected player.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/heroic_history?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/heroic_history?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Batch Get -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge post">GET / POST</span>
+        <span class="endpoint-path">/batch_get</span>
+      </div>
+      <p class="endpoint-desc">Bulk fetch profile summaries for multiple UIDs in a single request.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uids</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Comma-separated list of player IDs.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/batch_get?uids=10597688191,1028000098&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/batch_get?uids=10597688191,1028000098&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Weapon Exp -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/weapon_exp</span>
+      </div>
+      <p class="endpoint-desc">Fetch weapon mastery EXP, levels, kills, and headshot data.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/weapon_exp?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/weapon_exp?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Weapon Glory -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/weapon_glory</span>
+      </div>
+      <p class="endpoint-desc">Fetch weapon power regional leaderboard title records and glory statistics.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/weapon_glory?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/weapon_glory?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/leaderboard</span>
+      </div>
+      <p class="endpoint-desc">Fetch region-specific BR or CS ranked leaderboards with pagination controls.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">type</td>
+              <td class="param-type">Number</td>
+              <td class="param-required">Yes</td>
+              <td><code>1</code> = BR, <code>2</code> = CS.</td>
+            </tr>
+            <tr>
+              <td class="param-name">page</td>
+              <td class="param-type">Number</td>
+              <td class="param-optional">No</td>
+              <td>Page number. Default: <code>1</code>.</td>
+            </tr>
+            <tr>
+              <td class="param-name">size</td>
+              <td class="param-type">Number</td>
+              <td class="param-optional">No</td>
+              <td>Page size. Default: <code>50</code>.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/leaderboard?type=2&amp;page=1&amp;size=50&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/leaderboard?type=2&amp;page=1&amp;size=50&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Refresh -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge post">GET / POST</span>
+        <span class="endpoint-path">/refresh</span>
+      </div>
+      <p class="endpoint-desc">Manually refresh JWT authentication tokens for all configured regions.</p>
+      
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'curl -X POST &quot;http://127.0.0.1:5000/refresh&quot;')">Copy</button>
+        </div>
+        <pre><code>curl -X POST "http://127.0.0.1:5000/refresh"</code></pre>
+      </div>
+    </div>
+
+    <!-- CS Stats -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/cs_stats</span>
+      </div>
+      <p class="endpoint-desc">Fetch Clash Squad (CS) ranked combat performance: Stars, KDA, win rate, headshots, and MVP counts.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">season</td>
+              <td class="param-type">Number</td>
+              <td class="param-optional">No</td>
+              <td>CS Season number (e.g. <code>27</code>).</td>
+            </tr>
+            <tr>
+              <td class="param-name">mode</td>
+              <td class="param-type">Number</td>
+              <td class="param-optional">No</td>
+              <td><code>1</code> = Ranked, <code>2</code> = Casual. Default: <code>1</code>.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/cs_stats?uid=10597688191&amp;season=27&amp;mode=1&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/cs_stats?uid=10597688191&amp;season=27&amp;mode=1&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Wishlist -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/wishlist</span>
+      </div>
+      <p class="endpoint-desc">Fetch player's wishlisted items, pinned skins, and release timestamps.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/wishlist?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/wishlist?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Occupation -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/occupation</span>
+      </div>
+      <p class="endpoint-desc">Fetch player role proficiencies (Rusher, Sniper, Support), weapon masteries, and scores.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/occupation?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/occupation?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Outfit -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/outfit</span>
+      </div>
+      <p class="endpoint-desc">Fetch currently equipped costume bundle pieces, active/passive character skills, and custom weapon visual effects.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">uid</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric account UID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/outfit?uid=10597688191&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/outfit?uid=10597688191&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <!-- Clan Info -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/clan</span>
+      </div>
+      <p class="endpoint-desc">Fetch clan/guild profile, total weekly activeness points, and full roster members list.</p>
+      
+      <div class="section-title">Query Parameters</div>
+      <div class="params-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Data Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="param-name">clan_id</td>
+              <td class="param-type">String</td>
+              <td class="param-required">Yes</td>
+              <td>Target numeric Guild ID.</td>
+            </tr>
+            <tr>
+              <td class="param-name">region</td>
+              <td class="param-type">String</td>
+              <td class="param-optional">No</td>
+              <td>Server region code. Default: <code>SG</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Request Example</div>
+      <div class="code-box">
+        <div class="code-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this, 'http://127.0.0.1:5000/clan?clan_id=1028000098&amp;region=SG')">Copy</button>
+        </div>
+        <pre><code>http://127.0.0.1:5000/clan?clan_id=1028000098&amp;region=SG</code></pre>
+      </div>
+    </div>
+
+    <footer>
+      <p>Free Fire Info API v2.0 &bull; Developed with Flask &amp; Protobuf</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyCode(button, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.innerText;
+        button.innerText = 'Copied!';
+        button.style.color = '#38bdf8';
+        setTimeout(() => {
+          button.innerText = originalText;
+          button.style.color = '';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
