@@ -10,7 +10,7 @@ This file is for OSP/dev integration work. It is intentionally compact and machi
 Use a single base variable in your code:
 
 ```python
-BASE_URL = "https://your-api-domain.com"
+BASE_URL = "https://wzapi.vercel.app"
 ```
 
 Do not hardcode `http://127.0.0.1:5000` in prod or shared examples.
@@ -131,7 +131,7 @@ POST /refresh:
 ## Example requests
 
 ```bash
-BASE_URL="https://your-api-domain.com"
+BASE_URL="https://wzapi.vercel.app"
 
 curl -G "$BASE_URL/get" \
   --data-urlencode "uid=10597688191" \
