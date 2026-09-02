@@ -61,6 +61,11 @@ GET /get:
   optional: [region]
   default_region: SG
 
+GET /get_all:
+  required: [uid]
+  optional: [region]
+  default_region: SG
+
 GET /search:
   required: [name]
   optional: [region]
