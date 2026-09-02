@@ -113,6 +113,11 @@ def home():
             "GET/POST /refresh": {
                 "description": "Manually refresh JWT authentication tokens for all regions",
                 "example": "/refresh"
+            },
+            "GET /get_all": {
+                "description": "Fetch all player details (Personal Show, Wishlist, CS Stats, Outfit, Weapon Glory, Occupation, Combat Stats, Heroic History) concurrently",
+                "params": "?uid=<player_id>&region=<region_code>",
+                "example": "/get_all?uid=10597688191&region=SG"
             }
         },
         "supported_regions": sorted(list(SUPPORTED_REGIONS)),

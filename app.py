@@ -23,6 +23,7 @@ from routes.occupation import occupation_bp
 from routes.gallery import gallery_bp
 from routes.outfit import outfit_bp
 from routes.utils import utils_bp
+from routes.full_info import full_info_bp
 
 logging.basicConfig(level=logging.INFO)
 
@@ -44,6 +45,7 @@ app.register_blueprint(occupation_bp)
 app.register_blueprint(gallery_bp)
 app.register_blueprint(outfit_bp)
 app.register_blueprint(utils_bp)
+app.register_blueprint(full_info_bp)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
