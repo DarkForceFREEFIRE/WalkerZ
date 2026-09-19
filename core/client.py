@@ -5,7 +5,7 @@ from google.protobuf import json_format, message
 from core.crypto import aes_cbc_encrypt, decode_protobuf
 from core.auth import get_token_info, SUPPORTED_REGIONS
 
-RELEASEVERSION = "OB54"
+RELEASEVERSION = "OB55"
 USERAGENT = "ART/2.2.0 (Linux; U; Android 14; SAMSUNG_S25 Build/UP1A.240905.001)"
 
 async def dispatch_freefire_request(region: str, endpoint: str, raw_payload: bytes, response_class: message.Message) -> dict:
