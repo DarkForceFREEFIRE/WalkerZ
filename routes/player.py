@@ -16,6 +16,26 @@ def build_raw_personal_show_payload(uid: int, call_sign_src: int = 7) -> bytes:
     payload.extend([0x18, 0x01, 0x20, 0x01, 0x28, 0x01, 0x30, 0x01])
     return bytes(payload)
 
+def extract_account_details(data):
+    """
+    Safely extract nickname and show_emulator_flag (as 0 or 1)
+    whether data is a dict or a protobuf object.
+    """
+    nickname = None
+    is_emulator = 0
+
+    if isinstance(data, dict):
+        basic_info = data.get("basic_info") or {}
+        nickname = basic_info.get("nickname")
+        is_emulator = 1 if basic_info.get("show_emulator_flag") else 0
+    elif hasattr(data, "basic_info"):
+        basic_info = getattr(data, "basic_info", None)
+        if basic_info:
+            nickname = getattr(basic_info, "nickname", None)
+            is_emulator = 1 if getattr(basic_info, "show_emulator_flag", False) else 0
+
+    return nickname, is_emulator
+
 @player_bp.route('/get')
 def get_account_info():
     region = request.args.get('region')
@@ -43,14 +63,6 @@ def get_account_info():
     except Exception as e:
         return jsonify({"error": f"Invalid UID or Region ({region}). Details: {str(e)}"}), 500
 
-def extract_nickname(data):
-    """Helper to safely extract nickname whether data is a dict or protobuf object."""
-    if isinstance(data, dict):
-        return (data.get("basic_info") or {}).get("nickname")
-    elif hasattr(data, "basic_info"):
-        return getattr(data.basic_info, "nickname", None)
-    return None
-
 @player_bp.route('/nickname')
 def get_account_nickname():
     region = request.args.get('region')
@@ -74,11 +86,12 @@ def get_account_nickname():
                         AccountPersonalShow_pb2.AccountPersonalShowInfo
                     )
                 )
-                nickname = extract_nickname(data)
+                nickname, is_emulator = extract_account_details(data)
                 if nickname:
                     return jsonify({
                         "uid": int(uid),
                         "nickname": nickname,
+                        "emulator": is_emulator,
                         "region": reg
                     }), 200, {'X-Detected-Region': reg}
             except Exception:
@@ -96,13 +109,14 @@ def get_account_nickname():
                 AccountPersonalShow_pb2.AccountPersonalShowInfo
             )
         )
-        nickname = extract_nickname(data)
+        nickname, is_emulator = extract_account_details(data)
         if not nickname:
             return jsonify({"error": "Nickname not found for this UID."}), 404
 
         return jsonify({
             "uid": int(uid),
             "nickname": nickname,
+            "emulator": is_emulator,
             "region": region
         }), 200, {'X-Selected-Region': region}
     except Exception as e:
