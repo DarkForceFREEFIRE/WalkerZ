@@ -31,40 +31,52 @@ def get_account_credentials(region: str) -> Tuple[str, str]:
     return "3937206629", "E4D17A3799816184A9BA20C68D8DE55C69180F8C793CA1C6B164C6D14848D8DF"
 
 async def fetch_jwt_from_external_api(uid: str, password: str) -> dict:
-    url = "https://wzjwt.vercel.app/api/process"
-    params = {"mode": "id_pass", "uid": uid, "password": password}
+    """
+    Calls the new POST endpoint: https://wzjwt.vercel.app/token
+    """
+    url = "https://wzjwt.vercel.app/token"
+    payload = {"uid": uid, "password": password}
+    
     async with httpx.AsyncClient() as client:
-        resp = await client.get(url, params=params, timeout=15.0)
+        resp = await client.post(url, json=payload, timeout=15.0)
         resp.raise_for_status()
         data = resp.json()
+        
         if data.get("status") != "success":
             raise Exception(f"External API error: {data.get('message', 'Unknown error')}")
         return data
 
 async def create_jwt(region: str):
     uid, password = get_account_credentials(region)
-    data = await fetch_jwt_from_external_api(uid, password)
-    jwt = data.get("jwt")
-    lock_region = data.get("lockRegion", region)
-    server_url = data.get("serverUrl")
+    response_data = await fetch_jwt_from_external_api(uid, password)
+    
+    inner_data = response_data.get("data", {})
+    
+    jwt = inner_data.get("token")
+    lock_region = inner_data.get("lock_region", region)
+    server_url = inner_data.get("server_url")
+    ttl = inner_data.get("ttl", 25200)
+
     if not jwt or not server_url:
-        raise Exception("Missing jwt or serverUrl in API response")
+        raise Exception("Missing token or server_url in API response data")
+
     cached_tokens[region] = {
         'token': f"Bearer {jwt}",
         'region': lock_region,
         'server_url': server_url,
-        'expires_at': time.time() + 25200
+        'expires_at': time.time() + ttl
     }
 
 async def get_token_info(region: str) -> Tuple[str, str, str]:
     info = cached_tokens.get(region)
     if info and time.time() < info['expires_at']:
         return info['token'], info['region'], info['server_url']
+    
     await create_jwt(region)
     info = cached_tokens[region]
     return info['token'], info['region'], info['server_url']
 
 async def initialize_tokens():
-    tasks = [create_jwt(r) for r in SUPPORTED_REGIONS]
     import asyncio
+    tasks = [create_jwt(r) for r in SUPPORTED_REGIONS]
     await asyncio.gather(*tasks, return_exceptions=True)
