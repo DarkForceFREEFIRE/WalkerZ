@@ -1,0 +1,6 @@
+[build]
+  # The API runs as a Netlify Server (netlify/server/index.mjs).
+  # Only the files in `public/` are published as static assets, so
+  # source files such as accounts.json are never exposed publicly.
+  publish = "public"
+  command = ""

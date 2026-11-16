@@ -1,0 +1,13 @@
+{
+  "name": "walkerz-ff-api",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "long": "^5.2.3",
+    "protobufjs": "^7.4.0"
+  }
+}
